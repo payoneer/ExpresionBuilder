@@ -62,5 +62,32 @@ var test = allUsers.Where(query);
 Each of the above methods can recive an optional bool param named sortProperties, deafult value is True.
 When this param is set to True it will sort the order of the queries in the list to make sure the 'easiest' come first.
 
-the order is: bool, numeric values, string , datetime, other
- 
+the order is:
+1. bool
+2. Integers (Int and long)
+4. Floating point (Float, Double, Decimal)
+3. string and Guid
+4. datetime
+5. other
+
+## Order query
+
+You can also create order by queries.
+<pre>
+var orderAscList = new List&lt;Expression&lt;Func&lt;UserModel,dynamic&gt;&gt;&gt;();
+var orderDescList2 = new List&lt;Expression&lt;Func&lt;UserModel,dynamic&gt;&gt;&gt;();
+orderAscList.Add((o) => o.Age);
+orderDescList2.Add((o) => o.Rank);
+</pre>
+### Order by Asc
+<pre>
+allUsers = ExpresionTreeBuilder.CreateOrderASCQuery&lt;UserModel&gt;(allUsers, orderAscList);
+</pre>
+### Order by Desc
+<pre>
+allUsers = ExpresionTreeBuilder.CreateOrderDescQuery&lt;UserModel&gt;(allUsers, orderDescList2);
+</pre>
+### Order by Asc and Desc
+<pre>
+allUsers = ExpresionTreeBuilder.CreateOrderQuery&lt;UserModel&gt;(allUsers,orderAscList,orderDescList2,false);
+</pre>
