@@ -8,13 +8,31 @@ namespace ExpresionBuilder
 
     public class ExpresionTreeBuilder
     {
+        private static Dictionary<Type, int> TypesDictionary = new Dictionary<Type, int>
+        {
+            [typeof(bool)] = 1,
+
+            [typeof(int)] = 2,
+            [typeof(long)] = 2,
+            [typeof(uint)] = 2,
+            [typeof(ulong)] = 2,
+
+            [typeof(float)] = 3,
+            [typeof(double)] = 3,
+
+            [typeof(decimal)] = 4,
+
+            [typeof(string)] = 5,
+            [typeof(Guid)] = 5,
+        };
+
         public static int EnumerateProperty<t>(Expression<Func<t, Boolean>> expression) where t : class
         {
             Type type;
-            var body = expression.Body as System.Linq.Expressions.BinaryExpression;
+            var body = expression.Body as BinaryExpression;
             if (body == null)
             {
-                type = (expression.Body as System.Linq.Expressions.Expression).Type;
+                type = (expression.Body as Expression).Type;
             }
             else
             {
@@ -29,28 +47,10 @@ namespace ExpresionBuilder
 
             }
 
-            var dictionary = new Dictionary<Type, int>
-            {
-                [typeof(bool)] = 1,
-
-                [typeof(int)] = 2,
-                [typeof(long)] = 2,
-                [typeof(uint)] = 2,
-                [typeof(ulong)] = 2,
-
-                [typeof(float)] = 3,
-                [typeof(double)] = 3,
-
-                [typeof(decimal)] = 4,
-
-                [typeof(string)] = 5,
-                [typeof(Guid)] = 5,
-            };
-
-            return dictionary.ContainsKey(type) ? dictionary[type] : 6;
+            return TypesDictionary.ContainsKey(type) ? TypesDictionary[type] : 6;
         }
 
-        public static Expression<Func<t, bool>> CreateANDQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = false) where t : class
+        public static Expression<Func<t, bool>> CreateANDQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
         {
             if (sortProperties)
             {
@@ -68,11 +68,11 @@ namespace ExpresionBuilder
         }
 
 
-        public static Func<t, bool> CreateCompiledANDQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = false) where t : class
+        public static Func<t, bool> CreateCompiledANDQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
         {
             return CreateANDQuery<t>(expressionList, sortProperties).Compile();
         }
-        public static Expression<Func<t, bool>> CreateORQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = false) where t : class
+        public static Expression<Func<t, bool>> CreateORQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
         {
             if (sortProperties)
             {
@@ -89,12 +89,12 @@ namespace ExpresionBuilder
             return compoundQuery;
         }
 
-        public static Func<t, bool> CreateCompiledORQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = false) where t : class
+        public static Func<t, bool> CreateCompiledORQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
         {
             return CreateORQuery<t>(expressionList, sortProperties).Compile();
         }
         public static Expression<Func<t, bool>> CreateQuery<t>(List<Expression<Func<t, bool>>> expressionANDList, List<Expression<Func<t, bool>>> expressionORList,
-                                                                                                            bool sortProperties = false) where t : class
+                                                                                                            bool sortProperties = true) where t : class
         {
             if (sortProperties)
             {
@@ -165,57 +165,6 @@ namespace ExpresionBuilder
             return compound.AsQueryable();
         }
 
-    }
-    //http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
-
-    public class ParameterRebinder : ExpressionVisitor
-    {
-        private readonly Dictionary<ParameterExpression, ParameterExpression> map;
-
-        public ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
-        {
-            this.map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
-        }
-
-        public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp)
-        {
-            return new ParameterRebinder(map).Visit(exp);
-        }
-
-        protected override Expression VisitParameter(ParameterExpression p)
-        {
-            ParameterExpression replacement;
-            if (map.TryGetValue(p, out replacement))
-            {
-                p = replacement;
-            }
-            return base.VisitParameter(p);
-        }
-    }
-
-    public static class ExpressionUtility
-    {
-        public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
-        {
-            // build parameter map (from parameters of second to parameters of first)
-            var map = first.Parameters.Select((f, i) => new { f, s = second.Parameters[i] }).ToDictionary(p => p.s, p => p.f);
-
-            // replace parameters in the second lambda expression with parameters from the first
-            var secondBody = ParameterRebinder.ReplaceParameters(map, second.Body);
-
-            // apply composition of lambda expression bodies to parameters from the first expression
-            return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
-        }
-
-        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
-        {
-            return first.Compose(second, Expression.AndAlso);
-        }
-
-        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
-        {
-            return first.Compose(second, Expression.OrElse);
-        }
     }
 }
 
