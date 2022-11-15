@@ -12,7 +12,7 @@ namespace ExpressionBuilderCore
             var map = first.Parameters.Select((f, i) => new { f, s = second.Parameters[i] }).ToDictionary(p => p.s, p => p.f);
 
             // replace parameters in the second lambda expression with parameters from the first
-            var secondBody = ParameterRebinder.ReplaceParameters(map, second.Body);
+            var secondBody = ParameterReplacer.ReplaceParameters(map, second.Body);
 
             // apply composition of lambda expression bodies to parameters from the first expression
             return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
