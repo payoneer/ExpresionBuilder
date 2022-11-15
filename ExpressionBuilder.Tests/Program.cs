@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ExpresionBuilder.Tests.Models;
-using ExpresionBuilderCore;
+using ExpressionBuilder.Tests.Models;
+using ExpressionBuilderCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpresionBuilder.Tests
+namespace ExpressionBuilder.Tests
 {
     internal class Program
     {

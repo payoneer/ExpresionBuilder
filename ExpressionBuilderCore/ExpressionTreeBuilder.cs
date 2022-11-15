@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace ExpresionBuilderCore
+namespace ExpressionBuilderCore
 {
     public class ExpressionTreeBuilder
     {
-        private static Type StringType = typeof(string);
+        private static readonly Type StringType = typeof(string);
         private const int LastInOrder = 6;
         private static readonly Dictionary<Type, int> TypesDictionary = new()
         {
@@ -29,7 +29,7 @@ namespace ExpresionBuilderCore
 
         private static readonly List<string> StringOperations = new() { ".Contains(" };
 
-        public static int EnumerateProperty<t>(Expression<Func<t, bool>> expression) where t : class
+        public static int EnumerateProperty<T>(Expression<Func<T, bool>> expression) where T : class
         {
             Type type;
             if (expression.Body is BinaryExpression body)
@@ -58,11 +58,11 @@ namespace ExpresionBuilderCore
             return TypesDictionary.ContainsKey(type) ? TypesDictionary[type] : LastInOrder;
         }
 
-        public static Expression<Func<t, bool>> CreateANDQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
+        public static Expression<Func<T, bool>> CreateANDQuery<T>(List<Expression<Func<T, bool>>> expressionList, bool sortProperties = true) where T : class
         {
             if (sortProperties)
             {
-                expressionList = expressionList.OrderBy(o => EnumerateProperty<t>(o)).ToList();
+                expressionList = expressionList.OrderBy(EnumerateProperty<T>).ToList();
             }
 
             var compoundQuery = expressionList[0];
@@ -76,15 +76,15 @@ namespace ExpresionBuilderCore
         }
 
 
-        public static Func<t, bool> CreateCompiledANDQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
+        public static Func<T, bool> CreateCompiledANDQuery<T>(List<Expression<Func<T, bool>>> expressionList, bool sortProperties = true) where T : class
         {
-            return CreateANDQuery<t>(expressionList, sortProperties).Compile();
+            return CreateANDQuery<T>(expressionList, sortProperties).Compile();
         }
-        public static Expression<Func<t, bool>> CreateORQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
+        public static Expression<Func<T, bool>> CreateORQuery<T>(List<Expression<Func<T, bool>>> expressionList, bool sortProperties = true) where T : class
         {
             if (sortProperties)
             {
-                expressionList = expressionList.OrderBy(o => EnumerateProperty<t>(o)).ToList();
+                expressionList = expressionList.OrderBy(o => EnumerateProperty<T>(o)).ToList();
             }
 
             var compoundQuery = expressionList[0];
@@ -97,17 +97,17 @@ namespace ExpresionBuilderCore
             return compoundQuery;
         }
 
-        public static Func<t, bool> CreateCompiledORQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
+        public static Func<T, bool> CreateCompiledORQuery<T>(List<Expression<Func<T, bool>>> expressionList, bool sortProperties = true) where T : class
         {
-            return CreateORQuery<t>(expressionList, sortProperties).Compile();
+            return CreateORQuery<T>(expressionList, sortProperties).Compile();
         }
-        public static Expression<Func<t, bool>> CreateQuery<t>(List<Expression<Func<t, bool>>> expressionANDList, List<Expression<Func<t, bool>>> expressionORList,
-                                                                                                            bool sortProperties = true) where t : class
+        public static Expression<Func<T, bool>> CreateQuery<T>(List<Expression<Func<T, bool>>> expressionANDList, List<Expression<Func<T, bool>>> expressionORList,
+                                                                                                            bool sortProperties = true) where T : class
         {
             if (sortProperties)
             {
-                expressionANDList = expressionANDList.OrderBy(o => EnumerateProperty<t>(o)).ToList();
-                expressionORList = expressionORList.OrderBy(o => EnumerateProperty<t>(o)).ToList();
+                expressionANDList = expressionANDList.OrderBy(EnumerateProperty<T>).ToList();
+                expressionORList = expressionORList.OrderBy(EnumerateProperty<T>).ToList();
             }
 
             var compoundQuery = expressionANDList[0];
@@ -125,14 +125,14 @@ namespace ExpresionBuilderCore
             return compoundQuery;
         }
 
-        public static Func<t, bool> CreateCompiledQuery<t>(List<Expression<Func<t, bool>>> expressionANDList, List<Expression<Func<t, bool>>> expressionORList, bool sortProperties = false) where t : class
+        public static Func<T, bool> CreateCompiledQuery<T>(List<Expression<Func<T, bool>>> expressionANDList, List<Expression<Func<T, bool>>> expressionORList, bool sortProperties = false) where T : class
         {
-            return CreateQuery<t>(expressionANDList, expressionORList, sortProperties).Compile();
+            return CreateQuery<T>(expressionANDList, expressionORList, sortProperties).Compile();
         }
 
 
 
-        public static IQueryable<t> CreateOrderASCQuery<t>(IQueryable<t> query, List<Expression<Func<t, dynamic>>> list) where t : class
+        public static IQueryable<T> CreateOrderASCQuery<T>(IQueryable<T> query, List<Expression<Func<T, dynamic>>> list) where T : class
         {
             var compound = query.OrderBy(list[0].Compile());
 
@@ -144,7 +144,7 @@ namespace ExpresionBuilderCore
             return compound.AsQueryable();
         }
 
-        public static IQueryable<t> CreateOrderDescQuery<t>(IQueryable<t> query, List<Expression<Func<t, dynamic>>> list) where t : class
+        public static IQueryable<T> CreateOrderDescQuery<T>(IQueryable<T> query, List<Expression<Func<T, dynamic>>> list) where T : class
         {
             var compound = query.OrderByDescending(list[0].Compile());
 
@@ -156,7 +156,7 @@ namespace ExpresionBuilderCore
             return compound.AsQueryable();
         }
 
-        public static IQueryable<t> CreateOrderQuery<t>(IQueryable<t> query, List<Expression<Func<t, dynamic>>> listAsc, List<Expression<Func<t, dynamic>>> listDesc, bool startAsc) where t : class
+        public static IQueryable<T> CreateOrderQuery<T>(IQueryable<T> query, List<Expression<Func<T, dynamic>>> listAsc, List<Expression<Func<T, dynamic>>> listDesc, bool startAsc) where T : class
         {
             var compound = startAsc ? query.OrderBy(listAsc[0].Compile()) : query.OrderByDescending(listAsc[0].Compile());
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExpresionBuilder.Tests.Models;
+namespace ExpressionBuilder.Tests.Models;
 
 public partial class PaymentHistory
 {

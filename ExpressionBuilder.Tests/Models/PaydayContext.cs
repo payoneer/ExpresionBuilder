@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ExpresionBuilder.Tests.Models;
+namespace ExpressionBuilder.Tests.Models;
 
 public partial class PaydayContext : DbContext
 {

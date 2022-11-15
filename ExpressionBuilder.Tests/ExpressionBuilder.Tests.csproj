@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExpressionBuilderCore\ExpresionBuilderCore.csproj" />
+    <ProjectReference Include="..\ExpressionBuilderCore\ExpressionBuilderCore.csproj" />
   </ItemGroup>
 
 </Project>

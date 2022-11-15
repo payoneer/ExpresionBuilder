@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ExpresionBuilder.Tests.Models;
+namespace ExpressionBuilder.Tests.Models;
 
 [DebuggerDisplay("{Id} {Name} {Rank} {IsActive}")]
 public partial class Beneficiary
