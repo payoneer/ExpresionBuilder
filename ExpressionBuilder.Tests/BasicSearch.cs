@@ -17,9 +17,9 @@ namespace ExpressionBuilder.Tests
                 blogsList = blogsList.Where(b => b.IsActive == searchModel.IsActive.Value);
             }
 
-            if (searchModel.Rank.HasValue)
+            if (searchModel.AgeRestrection.HasValue)
             {
-                blogsList = blogsList.Where(b => b.Rank == searchModel.Rank.Value);
+                blogsList = blogsList.Where(b => b.AgeRestrection == searchModel.AgeRestrection.Value);
             }
 
             if (searchModel.Name != null)
@@ -35,6 +35,16 @@ namespace ExpressionBuilder.Tests
             if (searchModel.Link != null)
             {
                 blogsList = blogsList.Where(b => b.Link.Contains(searchModel.Link));
+            }
+
+            if (searchModel.Auther != null)
+            {
+                blogsList = blogsList.Where(b => b.Auther.Contains(searchModel.Auther));
+            }
+
+            if (searchModel.Tags != null)
+            {
+                blogsList = blogsList.Where(b => b.Tags.Contains(searchModel.Tags));
             }
 
             return blogsList.ToList();

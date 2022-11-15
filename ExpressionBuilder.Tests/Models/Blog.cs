@@ -11,16 +11,17 @@ public partial class Blog
 
     public string Description { get; set; }
 
-    public string Email { get; set; }
+    public string Auther { get; set; }
 
-    public string Password { get; set; }
+    public string Tags { get; set; }
 
     public string Link { get; set; }
 
     public string ImageUrl { get; set; }
 
     public bool IsActive { get; set; }
+ 
 
-    public int Rank { get; set; }
+    public int AgeRestrection { get; set;}
 
 }
