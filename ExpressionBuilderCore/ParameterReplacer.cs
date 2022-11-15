@@ -3,7 +3,9 @@ using System.Linq.Expressions;
 
 namespace ExpressionBuilderCore
 {
-    //http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
+    //for more info read the blog posts:
+    //https://learn.microsoft.com/en-us/archive/blogs/meek/linq-to-entities-combining-predicates
+    //https://learn.microsoft.com/en-us/archive/blogs/mattwar/linq-building-an-iqueryable-provider-part-ii
 
     public class ParameterReplacer : ExpressionVisitor
     {
