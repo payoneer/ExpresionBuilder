@@ -14,22 +14,22 @@ namespace ExpressionBuilder.Tests
         static async Task Main(string[] args)
         {
 
-            var context = new PaydayContext();
+            var context = new BlogContext();
 
-            var beneficiaries = await context.Beneficiaries.Select(s => new Beneficiary
+            var beneficiaries = await context.Blogs.Select(s => new Blog
             {
                 Id = s.Id
             }).ToListAsync();
 
-            var andList = new List<Expression<Func<Beneficiary, bool>>>
+            var andList = new List<Expression<Func<Blog, bool>>>
             {
                 p => p.Rank > 1,
                 p=>p.Name.Contains("books"),
                 p => p.IsActive,
             };
 
-            var predicate = ExpressionTreeBuilder.CreateANDQuery<Beneficiary>(andList);
-            var query = context.Set<Beneficiary>().Where(predicate);
+            var predicate = ExpressionTreeBuilder.CreateANDQuery<Blog>(andList);
+            var query = context.Set<Blog>().Where(predicate);
             Console.WriteLine(query.ToQueryString());
             var test = await query.ToListAsync();
 
