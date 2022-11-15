@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exmpales.cs" />
-    <Compile Include="ExpresionTreeBuilder.cs" />
+    <Compile Include="ExpressionTreeBuilder.cs" />
     <Compile Include="ExpressionUtility.cs" />
     <Compile Include="ParameterRebinder.cs" />
     <Compile Include="Program.cs" />

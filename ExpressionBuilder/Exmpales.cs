@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpresionBuilder
 {
@@ -35,7 +33,7 @@ namespace ExpresionBuilder
             andList.Add((o) => o.Rank == 1);
 
 
-            var test = allUsers.Where(ExpresionTreeBuilder.CreateANDQuery<UserModel>(andList,true).Compile());
+            var test = allUsers.Where(ExpressionTreeBuilder.CreateANDQuery<UserModel>(andList,true).Compile());
 
 
             List<Expression<Func<UserModel,dynamic>>> list = new List<Expression<Func<UserModel,dynamic>>>();
@@ -43,7 +41,7 @@ namespace ExpresionBuilder
             list.Add((o) => o.Age);
             list2.Add((o) => o.Rank);
 
-            allUsers = ExpresionTreeBuilder.CreateOrderQuery<UserModel>(allUsers,list,list2,false);
+            allUsers = ExpressionTreeBuilder.CreateOrderQuery<UserModel>(allUsers,list,list2,false);
             
         }
     }

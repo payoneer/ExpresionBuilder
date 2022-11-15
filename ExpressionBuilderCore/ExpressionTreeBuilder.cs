@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 
 namespace ExpresionBuilderCore
 {
-    public class ExpresionTreeBuilder
+    public class ExpressionTreeBuilder
     {
         private static Type StringType = typeof(string);
         private const int LastInOrder = 6;
-        private static Dictionary<Type, int> TypesDictionary = new()
+        private static readonly Dictionary<Type, int> TypesDictionary = new()
         {
             [typeof(bool)] = 1,
 
@@ -27,7 +27,9 @@ namespace ExpresionBuilderCore
             [typeof(Guid)] = 5,
         };
 
-        public static int EnumerateProperty<t>(Expression<Func<t, Boolean>> expression) where t : class
+        private static readonly List<string> StringOperations = new() { ".Contains(" };
+
+        public static int EnumerateProperty<t>(Expression<Func<t, bool>> expression) where t : class
         {
             Type type;
             if (expression.Body is BinaryExpression body)
@@ -47,7 +49,10 @@ namespace ExpresionBuilderCore
             }
             else// if not BinaryExpression
             {
-                type = expression.Body.Type;
+                var bodyString = expression.Body.ToString();
+                type = StringOperations.Any(s => bodyString.Contains(s)) ?
+                    typeof(string) :
+                    expression.Body.Type;
             }
 
             return TypesDictionary.ContainsKey(type) ? TypesDictionary[type] : LastInOrder;

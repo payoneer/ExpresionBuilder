@@ -5,9 +5,10 @@ using System.Linq.Expressions;
 
 namespace ExpresionBuilder
 {
-    public class ExpresionTreeBuilder
+    public class ExpressionTreeBuilder
     {
         private static Type StringType = typeof(string);
+        private const int LastInOrder = 6;
         private static Dictionary<Type, int> TypesDictionary = new Dictionary<Type, int>
         {
             [typeof(bool)] = 1,
@@ -25,21 +26,17 @@ namespace ExpresionBuilder
             [typeof(string)] = 5,
             [typeof(Guid)] = 5,
         };
+        private static readonly List<string> StringOperations = new List<string> { ".Contains(" };
 
-        public static int EnumerateProperty<t>(Expression<Func<t, Boolean>> expression) where t : class
+        public static int EnumerateProperty<t>(Expression<Func<t, bool>> expression) where t : class
         {
             Type type;
-            var body = expression.Body as BinaryExpression;
-            if (body == null)
+            if (expression.Body is BinaryExpression body)
             {
-                type = expression.Body.Type;
-            }
-            else
-            {
-                if (!body.ToString().Contains("And"))
+                if (!body.ToString().Contains("And"))//if complex expression
                 {
                     type = body.Left.Type;
-                    if (type.Name.Contains("Nullable"))
+                    if (type.Name.Contains("Nullable"))//is Nullable type
                     {
                         type = Nullable.GetUnderlyingType(type);
                     }
@@ -49,8 +46,15 @@ namespace ExpresionBuilder
                     type = StringType;
                 }
             }
+            else// if not BinaryExpression
+            {
+                var bodyString = expression.Body.ToString();
+                type = StringOperations.Any(s => bodyString.Contains(s)) ?
+                    typeof(string) :
+                    expression.Body.Type;
+            }
 
-            return TypesDictionary.ContainsKey(type) ? TypesDictionary[type] : 6;
+            return TypesDictionary.ContainsKey(type) ? TypesDictionary[type] : LastInOrder;
         }
 
         public static Expression<Func<t, bool>> CreateANDQuery<t>(List<Expression<Func<t, bool>>> expressionList, bool sortProperties = true) where t : class
