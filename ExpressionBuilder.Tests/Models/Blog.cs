@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ExpressionBuilder.Tests.Models;
 
-[DebuggerDisplay("{Id} {Name} {Rank} {IsActive}")]
 public partial class Blog
 {
     public int Id { get; set; }
@@ -11,7 +11,7 @@ public partial class Blog
 
     public string Description { get; set; }
 
-    public string Auther { get; set; }
+    public string Author { get; set; }
 
     public string Tags { get; set; }
 
@@ -20,8 +20,6 @@ public partial class Blog
     public string ImageUrl { get; set; }
 
     public bool IsActive { get; set; }
- 
 
-    public int AgeRestrection { get; set;}
-
+    public int AgeRestriction { get; set; }
 }

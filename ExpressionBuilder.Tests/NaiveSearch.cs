@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace ExpressionBuilder.Tests
 {
-    public class BasicSearch
+    public class NaiveSearch
     {
         public List<Blog> Search(SearchModel searchModel)
         {
-            var context = new BlogContext();
+            var context = new BlogsContext();
 
             var blogsList = context.Blogs.AsQueryable();
 
@@ -17,9 +17,9 @@ namespace ExpressionBuilder.Tests
                 blogsList = blogsList.Where(b => b.IsActive == searchModel.IsActive.Value);
             }
 
-            if (searchModel.AgeRestrection.HasValue)
+            if (searchModel.AgeRestriction.HasValue)
             {
-                blogsList = blogsList.Where(b => b.AgeRestrection == searchModel.AgeRestrection.Value);
+                blogsList = blogsList.Where(b => b.AgeRestriction == searchModel.AgeRestriction.Value);
             }
 
             if (searchModel.Name != null)
@@ -37,9 +37,9 @@ namespace ExpressionBuilder.Tests
                 blogsList = blogsList.Where(b => b.Link.Contains(searchModel.Link));
             }
 
-            if (searchModel.Auther != null)
+            if (searchModel.Author != null)
             {
-                blogsList = blogsList.Where(b => b.Auther.Contains(searchModel.Auther));
+                blogsList = blogsList.Where(b => b.Author.Contains(searchModel.Author));
             }
 
             if (searchModel.Tags != null)

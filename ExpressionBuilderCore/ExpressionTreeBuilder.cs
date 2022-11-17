@@ -8,7 +8,7 @@ namespace ExpressionBuilderCore
     public class ExpressionTreeBuilder
     {
         private static readonly Type StringType = typeof(string);
-        private const int LastInOrder = 6;
+        private const int LastInOrder = 10;
         private static readonly Dictionary<Type, int> TypesDictionary = new()
         {
             [typeof(bool)] = 1,
@@ -53,6 +53,11 @@ namespace ExpressionBuilderCore
                 type = StringOperations.Any(s => bodyString.Contains(s)) ?
                     typeof(string) :
                     expression.Body.Type;
+
+                if (type.Name.Contains("Nullable"))//is Nullable type
+                {
+                    type = Nullable.GetUnderlyingType(type);
+                }
             }
 
             return TypesDictionary.ContainsKey(type) ? TypesDictionary[type] : LastInOrder;

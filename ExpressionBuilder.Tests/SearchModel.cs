@@ -8,13 +8,12 @@
 
         public string Link { get; set; }
 
-        public string Auther { get; set; }
+        public string Author { get; set; }
 
         public string Tags { get; set; }
 
         public bool? IsActive { get; set; }
  
-
-        public int? AgeRestrection { get; set; }
+        public int? AgeRestriction { get; set; }
     }
 }

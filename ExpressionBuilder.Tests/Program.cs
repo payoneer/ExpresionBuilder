@@ -13,28 +13,15 @@ namespace ExpressionBuilder.Tests
     {
         static async Task Main(string[] args)
         {
-
-            var context = new BlogContext();
-
-            var beneficiaries = await context.Blogs.Select(s => new Blog
+            var search = new ExpressionSearch();
+            var result = search.Search(new SearchModel
             {
-                Id = s.Id
-            }).ToListAsync();
+                IsActive = true,
+                AgeRestriction = 9,
+                Name = "myBlog"
+            });
 
-            var andList = new List<Expression<Func<Blog, bool>>>
-            {
-                p => p.Rank > 1,
-                p=>p.Name.Contains("books"),
-                p => p.IsActive,
-            };
-
-            var predicate = ExpressionTreeBuilder.CreateANDQuery<Blog>(andList);
-            var query = context.Set<Blog>().Where(predicate);
-            Console.WriteLine(query.ToQueryString());
-            var test = await query.ToListAsync();
-
-
-            Console.WriteLine("Hello World!");
+            Console.ReadKey();
         }
 
     }
