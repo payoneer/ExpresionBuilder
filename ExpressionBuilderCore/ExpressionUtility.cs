@@ -6,7 +6,6 @@ namespace ExpressionBuilderCore
 {
     //for more info read the blog posts:
     //https://learn.microsoft.com/en-us/archive/blogs/meek/linq-to-entities-combining-predicates
-    //https://learn.microsoft.com/en-us/archive/blogs/mattwar/linq-building-an-iqueryable-provider-part-ii
     public static class ExpressionUtility
     {
         public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
