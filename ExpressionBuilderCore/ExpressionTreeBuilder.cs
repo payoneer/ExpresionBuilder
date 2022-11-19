@@ -29,7 +29,7 @@ namespace ExpressionBuilderCore
 
         private static readonly List<string> StringOperations = new() { ".Contains(" };
 
-        public static int EnumerateProperty<T>(Expression<Func<T, bool>> expression) where T : class
+        public static int SortProperties<T>(Expression<Func<T, bool>> expression) where T : class
         {
             Type type;
             if (expression.Body is BinaryExpression body)
@@ -67,7 +67,7 @@ namespace ExpressionBuilderCore
         {
             if (sortProperties)
             {
-                expressionList = expressionList.OrderBy(EnumerateProperty<T>).ToList();
+                expressionList = expressionList.OrderBy(SortProperties<T>).ToList();
             }
 
             var compoundQuery = expressionList[0];
@@ -89,7 +89,7 @@ namespace ExpressionBuilderCore
         {
             if (sortProperties)
             {
-                expressionList = expressionList.OrderBy(o => EnumerateProperty<T>(o)).ToList();
+                expressionList = expressionList.OrderBy(o => SortProperties<T>(o)).ToList();
             }
 
             var compoundQuery = expressionList[0];
@@ -111,8 +111,8 @@ namespace ExpressionBuilderCore
         {
             if (sortProperties)
             {
-                expressionANDList = expressionANDList.OrderBy(EnumerateProperty<T>).ToList();
-                expressionORList = expressionORList.OrderBy(EnumerateProperty<T>).ToList();
+                expressionANDList = expressionANDList.OrderBy(SortProperties<T>).ToList();
+                expressionORList = expressionORList.OrderBy(SortProperties<T>).ToList();
             }
 
             var compoundQuery = expressionANDList[0];
